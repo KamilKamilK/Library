@@ -1,0 +1,27 @@
+CREATE DATABASE IF NOT EXISTS library;
+
+USE library;
+
+CREATE TABLE author
+(
+    id INT AUTO_INCREMENT NOT NULL,
+    name VARCHAR(255) NOT NULL,
+    country VARCHAR(255) NOT NULL,
+    created_at DATETIME NOT NULL,
+    updated_at DATETIME NOT NULL,
+    PRIMARY KEY (id)
+) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci ENGINE = InnoDB;
+
+CREATE TABLE book
+(
+   id INT AUTO_INCREMENT NOT NULL,
+   author_id INT DEFAULT NULL,
+   name VARCHAR(255) NOT NULL,
+   publisher VARCHAR(255) NOT NULL,
+   pages INT NOT NULL,
+   created_at DATETIME NOT NULL,
+   updated_at DATETIME NOT NULL,
+   INDEX IDX_CBE5A331F675F31B (author_id),
+   PRIMARY KEY (id),
+   FOREIGN KEY (author_id) REFERENCES author (id) ON DELETE SET NULL
+) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci ENGINE = InnoDB;
