@@ -18,14 +18,13 @@ class AuthorService
 
     public function getAuthor($params): Author
     {
-
-        $task = (new Author())
+        $author = (new Author())
             ->setName($params['title'])
             ->setCountry($params['country'])
             ->setCreatedAt(new \DateTime())
             ->setUpdatedAt(new \DateTime());
 
-        $this->repository->save($task, true);
-        return $task;
+        $this->repository->save($author, true);
+        return $author;
     }
 }

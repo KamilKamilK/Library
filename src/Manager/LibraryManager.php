@@ -3,7 +3,6 @@
 namespace App\Manager;
 
 use App\Entity\Book;
-use App\Factory\AuthorFactory;
 use App\Service\AuthorService;
 use App\Service\BookService;
 use Symfony\Component\Messenger\MessageBusInterface;
@@ -13,34 +12,55 @@ class LibraryManager
     private BookService $bookService;
     private AuthorService $authorService;
 
-    public function __construct(BookService $bookService, AuthorService $authorService, MessageBusInterface $messenger ) {
+    public function __construct(BookService $bookService, AuthorService $authorService, MessageBusInterface $messenger)
+    {
 
         $this->messenger = $messenger;
         $this->bookService = $bookService;
         $this->authorService = $authorService;
     }
+
     public function getAllBooks(): array
     {
-//        $envelope = $this->messenger->dispatch(new GetBookQuery($table));
-//        $aggregatedData = $envelope->last( HandledStamp::class )->getResult();
-//
-//        $rates = $this->service->mapRates( $aggregatedData['rates'] );
-//
-//        return new JsonResponse ( [
-//            'tableNumber'  => $aggregatedData['tableNumber'],
-//            'updatingDate' => $aggregatedData['updatingDate'],
-//            'rates'        => $rates
-//        ], Response::HTTP_OK, );
-
-
         return $this->bookService->getAllBooks();
     }
 
+//    public function createBook($params): void
+//    {
+////        $author = $this->authorService->getAuthor($params['author']);
+//        $this->bookService->createBook($params);
+//    }
+//
+//    public function findBooks($params): array
+//    {
+//        return $this->bookService->findByParam($params);
+//    }
+//
+//    public function findBook($id): Book
+//    {
+//        return $this->bookService->findById($id);
+//    }
+//
+//    public function deleteBook($id): void
+//    {
+//        $this->bookService->deleteById($id);
+//    }
 
-    public function createBook($params): array
+    public function action($action, $id = null, $params = [])
     {
-        $author = $this->authorService->getAuthor($params['author']);
-
-        $this->bookService->createBook($params, $author);
+//        dd($params);
+        if ($action === 'find') {
+            return $this->bookService->findById($id);
+        } elseif ($action === 'delete') {
+            $this->bookService->deleteBook($id);
+        } elseif ($action === 'create') {
+            $this->bookService->createBook($params);
+        } elseif ($action === 'update') {
+            $this->bookService->updateBook($id, $params);
+        } elseif ($action === 'all') {
+            return $this->bookService->getAllBooks();
+        } elseif ($action === 'search') {
+            return $this->bookService->findByParam($params);
+        }
     }
 }

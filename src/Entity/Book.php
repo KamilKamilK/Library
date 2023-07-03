@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\BookRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Timestampable\Traits\TimestampableEntity;
 
@@ -24,11 +26,16 @@ class Book
     #[ORM\Column]
     private ?int $pages = null;
 
-    #[ORM\ManyToOne(inversedBy: 'books')]
-    private ?Author $author = null;
-
     #[ORM\Column]
-    private ?bool $isPublished = false;
+    private ?bool $isPublished = null;
+
+    #[ORM\ManyToMany(targetEntity: Author::class, inversedBy: 'books')]
+    private Collection $authors;
+
+    public function __construct()
+    {
+        $this->authors = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -40,7 +47,7 @@ class Book
         return $this->title;
     }
 
-    public function setTitle(string $title): static
+    public function setTitle(string $title): self
     {
         $this->title = $title;
 
@@ -52,7 +59,7 @@ class Book
         return $this->publisher;
     }
 
-    public function setPublisher(string $publisher): static
+    public function setPublisher(string $publisher): self
     {
         $this->publisher = $publisher;
 
@@ -64,33 +71,45 @@ class Book
         return $this->pages;
     }
 
-    public function setPages(int $pages): static
+    public function setPages(int $pages): self
     {
         $this->pages = $pages;
 
         return $this;
     }
 
-    public function getAuthor(): ?Author
-    {
-        return $this->author;
-    }
-
-    public function setAuthor(?Author $author): static
-    {
-        $this->author = $author;
-
-        return $this;
-    }
-
-    public function isIsPublished(): ?bool
+    public function isPublished(): ?bool
     {
         return $this->isPublished;
     }
 
-    public function setIsPublished(bool $isPublished): static
+    public function setIsPublished(bool $isPublished): self
     {
         $this->isPublished = $isPublished;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Author>
+     */
+    public function getAuthors(): Collection
+    {
+        return $this->authors;
+    }
+
+    public function addAuthor(Author $author): static
+    {
+        if (!$this->authors->contains($author)) {
+            $this->authors->add($author);
+        }
+
+        return $this;
+    }
+
+    public function removeAuthor(Author $author): static
+    {
+        $this->authors->removeElement($author);
 
         return $this;
     }

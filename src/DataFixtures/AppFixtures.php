@@ -14,7 +14,7 @@ class AppFixtures extends Fixture
         AuthorFactory::createMany(10);
         BookFactory::createMany(30, function () {
             return [
-              'author' => AuthorFactory::random()
+              'authors' => [AuthorFactory::random()]
             ];
         });
     }

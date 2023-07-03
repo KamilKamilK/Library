@@ -1,12 +1,9 @@
 {% import _self as formMacros %}
 
-{% macro printAuthorRow(authorsForm) %}
+{% macro printAuthorRow(authorsForm, nameValue = null, countryValue = null) %}
     <div class="col-xs-4 js-tool-item">
-
         <button class="btn btn-danger btn-sm js-remove-tool">- Remove Author</button>
-
         {{ form_errors(authorsForm) }}
-
         {{ form_row(authorsForm.name) }}
         {{ form_row(authorsForm.country) }}
     </div>
