@@ -16,9 +16,10 @@ CREATE TABLE book
 (
    id INT AUTO_INCREMENT NOT NULL,
    author_id INT DEFAULT NULL,
-   name VARCHAR(255) NOT NULL,
+   title VARCHAR(255) NOT NULL,
    publisher VARCHAR(255) NOT NULL,
    pages INT NOT NULL,
+   is_published TINYINT(1) NOT NULL,
    created_at DATETIME NOT NULL,
    updated_at DATETIME NOT NULL,
    INDEX IDX_CBE5A331F675F31B (author_id),

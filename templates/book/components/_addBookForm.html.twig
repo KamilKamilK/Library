@@ -1,0 +1,38 @@
+{% import _self as formMacros %}
+
+{% macro printAuthorRow(authorsForm) %}
+    <div class="col-xs-4 js-tool-item">
+
+        <button class="btn btn-danger btn-sm js-remove-tool">- Remove Author</button>
+
+        {{ form_errors(authorsForm) }}
+
+        {{ form_row(authorsForm.name) }}
+        {{ form_row(authorsForm.country) }}
+    </div>
+{% endmacro %}
+
+{{ form_start(form, {'attr': {'id': 'add_task'}}) }}
+    {{ form_row(form.title) }}
+
+    {{ form_row(form.publisher) }}
+
+    {{ form_row(form.pages) }}
+    {{ form_row(form.isPublished) }}
+
+<div class="row js-tools-wrapper"
+     data-prototype="{{ formMacros.printAuthorRow(form.authors.vars.prototype)|e('html_attr') }}"
+     data-index="{{ form.authors|length }}">
+
+    {% for authorForm in form.authors %}
+        <h1>{{ authorForm.vars.value }}</h1>
+        {{ formMacros.printAuthorRow(authorForm) }}
+    {% endfor %}
+
+    <div class="text-center">
+        <button class="btn btn-success btn-sm js-tool-add">+ Add Author</button>
+    </div>
+</div>
+
+<button type="submit" class="btn btn-primary" formnovalidate>Add Book</button>
+{{ form_end(form) }}
