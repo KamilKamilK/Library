@@ -27,7 +27,7 @@ class BookType extends AbstractType
                 'label' => 'Publisher',
                 'required' => true,
                 'attr' => [
-                    'autocomplete' => 'off',
+                    'autocomplete' => 'on',
                 ],
             ])
             ->add('pages', IntegerType::class, [
@@ -39,7 +39,7 @@ class BookType extends AbstractType
             ])
             ->add('isPublished', CheckboxType::class, [
                 'label' => 'Is Published?',
-                'required' => true,
+                'required' => false,
                 'attr' => [
                     'autocomplete' => 'off',
                 ],
@@ -50,6 +50,7 @@ class BookType extends AbstractType
                 'allow_add' => true,
                 'allow_delete' => true,
                 'by_reference' => false,
+                'prototype' => true,
             ]);
     }
 

@@ -6,9 +6,20 @@
         <button class="btn btn-danger btn-sm js-remove-tool">- Remove Author</button>
 
         {{ form_errors(authorsForm) }}
+        <button class="btn btn-primary btn-sm js-edit-author">Edit Author</button>
+        <button class="btn btn-success btn-sm js-save-author">Save Author</button>
 
-        {{ form_row(authorsForm.name, {'value': author.name}) }}
-        {{ form_row(authorsForm.country, {'value': author.country}) }}
+        {{ form_errors(authorsForm) }}
+
+        {{ form_row(authorsForm.name, {'attr': {'class': 'js-author-name', 'readonly': 'readonly'}}) }}
+        {{ form_row(authorsForm.country, {'attr': {'class': 'js-author-country', 'readonly': 'readonly'}}) }}
+
+
+        {#        {{ form_row(authorsForm.name) }}#}
+{#        {{ form_row(authorsForm.country) }}#}
+
+{#        {{ form_row(authorsForm.name, {'value': author.name}) }}#}
+{#        {{ form_row(authorsForm.country, {'value': author.country}) }}#}
     </div>
 {% endmacro %}
 
@@ -20,19 +31,14 @@
     {{ form_row(form.pages, {'value': book.pages}) }}
     {{ form_row(form.isPublished, {'value': book.isPublished}) }}
 
-{#<div class="row js-tools-wrapper"#}
-{#     data-prototype="{{ formMacros.printAuthorRow(form.authors.vars.prototype)|e('html_attr') }}"#}
-{#     data-index="{{ form.authors|length }}">#}
+<div class="row js-tools-wrapper"
+     data-prototype="{{ formMacros.printAuthorRow(form.authors.vars.prototype)|e('html_attr') }}"
+     data-index="{{ form.authors|length }}">
 
-{#    {% for authorForm in form.authors %}#}
-{#        <h1>{{ authorForm.vars.value }}</h1>#}
-{#        {{ formMacros.printAuthorRow(authorForm) }}#}
-{#    {% endfor %}#}
-
-{#    <div class="text-center">#}
-{#        <button class="btn btn-success btn-sm js-tool-add">+ Add Author</button>#}
-{#    </div>#}
-{#</div>#}
+    <div class="text-center">
+        <button class="btn btn-success btn-sm js-tool-add">+ Add Author</button>
+    </div>
+</div>
 
 <button type="submit" class="btn btn-primary" formnovalidate>Update Book</button>
 {{ form_end(form) }}

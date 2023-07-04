@@ -28,11 +28,12 @@ class BookController extends AbstractController
         $books = $this->manager->action('all');
         $form = $this->createForm(SearchFormType::class);
         $form->handleRequest($request);
+//        dd($books);
 
         if ($form->isSubmitted() && $form->isValid()) {
             $params = $form->getData();
             try {
-                $books = $this->manager->action('search', $params);
+                $books = $this->manager->action('search',null, $params);
             } catch (\Exception) {
                 throw $this->createNotFoundException();
             }
@@ -76,12 +77,14 @@ class BookController extends AbstractController
     public function put($bookId, Request $request): Response
     {
         $book = $this->manager->action('find',$bookId);
-        $form = $this->createForm(BookType::class);
+        $form = $this->createForm(BookType::class, $book);
+
+//        dd($book->getAuthors()->toArray());
+        $form->get('authors')->setData($book->getAuthors()->toArray());
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
             $params = $form->getData();
-//            dd($params);
 
             try {
                 $this->manager->action('update',$bookId, $params);

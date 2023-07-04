@@ -3,30 +3,45 @@ DATABASE IF NOT EXISTS main;
 
 USE main;
 
--- CREATE TABLE `user` (
---                         id INT AUTO_INCREMENT NOT NULL,
---                         email VARCHAR(180) NOT NULL,
---                         roles JSON NOT NULL,
---                         password VARCHAR(255) NOT NULL,
---                         first_name VARCHAR(255) DEFAULT NULL,
---                         last_name VARCHAR(255) DEFAULT NULL,
---                         is_verified TINYINT(1) NOT NULL,
---                         created_at DATETIME NOT NULL,
---                         updated_at DATETIME NOT NULL,
---                         UNIQUE INDEX UNIQ_8D93D649E7927C74 (email),
---                         PRIMARY KEY(id)
--- ) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB;
+CREATE
+DATABASE IF NOT EXISTS library;
 
--- CREATE TABLE `task` (
---                         id INT AUTO_INCREMENT NOT NULL,
---                         user_id INT DEFAULT NULL,
---                         title VARCHAR(100) NOT NULL,
---                         details VARCHAR(255) NOT NULL,
---                         deadline DATE NOT NULL,
---                         completed TINYINT(1) NOT NULL,
---                         created_at DATETIME NOT NULL,
---                         updated_at DATETIME NOT NULL,
---                         INDEX IDX_527EDB25A76ED395 (user_id),
---                         PRIMARY KEY(id),
---                         CONSTRAINT FK_527EDB25A76ED395 FOREIGN KEY (user_id) REFERENCES `user` (id)
--- ) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB;
+USE
+library;
+
+CREATE TABLE author
+(
+    id         INT AUTO_INCREMENT NOT NULL,
+    name       VARCHAR(255) NOT NULL,
+    country    VARCHAR(255) NOT NULL,
+    created_at DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    PRIMARY KEY (id)
+) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci ENGINE = InnoDB;
+
+CREATE TABLE book
+(
+    id           INT AUTO_INCREMENT NOT NULL,
+    author_id    INT DEFAULT NULL,
+    title        VARCHAR(255) NOT NULL,
+    publisher    VARCHAR(255) NOT NULL,
+    pages        INT          NOT NULL,
+    is_published TINYINT(1) NOT NULL,
+    created_at   DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at   DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    INDEX        IDX_CBE5A331F675F31B (author_id),
+    PRIMARY KEY (id),
+    FOREIGN KEY (author_id) REFERENCES author (id) ON DELETE SET NULL
+) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci ENGINE = InnoDB;
+
+
+CREATE TABLE book_author
+(
+    book_id   INT NOT NULL,
+    author_id INT NOT NULL,
+    INDEX     IDX_9478D34516A2B381 (book_id),
+    INDEX     IDX_9478D345F675F31B (author_id),
+    PRIMARY KEY (book_id, author_id),
+    FOREIGN KEY (book_id) REFERENCES book (id) ON DELETE CASCADE,
+    FOREIGN KEY (author_id) REFERENCES author (id) ON DELETE CASCADE
+) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci ENGINE = InnoDB;

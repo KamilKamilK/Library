@@ -12,9 +12,9 @@ class AppFixtures extends Fixture
     public function load(ObjectManager $manager): void
     {
         AuthorFactory::createMany(10);
-        BookFactory::createMany(30, function () {
+        BookFactory::createMany(5, function () {
             return [
-              'authors' => [AuthorFactory::random()]
+              'authors' => [AuthorFactory::random(),AuthorFactory::random(),AuthorFactory::random()]
             ];
         });
     }

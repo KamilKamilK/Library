@@ -16,15 +16,33 @@ class AuthorService
         $this->repository = $repository;
     }
 
-    public function getAuthor($params): Author
+    public function createAuthor(Author $author): Author
     {
-        $author = (new Author())
-            ->setName($params['title'])
-            ->setCountry($params['country'])
+        $newAuthor = (new Author())
+            ->setName($author->getName())
+            ->setCountry($author->getCountry())
             ->setCreatedAt(new \DateTime())
             ->setUpdatedAt(new \DateTime());
 
-        $this->repository->save($author, true);
-        return $author;
+//        dd($newAuthor);
+        $this->repository->save($newAuthor, true);
+//        dd($newAuthor);
+
+        return $newAuthor;
+    }
+
+    public function getAuthor(Author $author): ?Author
+    {
+//        dd($author);
+        if ($author->getId() !== null){
+            $foundAuthor = $this->repository->findOneBy(['id' => $author->getId()]);
+        } elseif ($author->getName() !== null){
+            $foundAuthor = $this->repository->findOneBy(['name' => $author->getName()]);
+        } elseif ($author->getCountry() !== null){
+            $foundAuthor = $this->repository->findOneBy(['country' => $author->getCountry()]);
+        }
+
+//        dd($foundAuthor);
+        return $foundAuthor;
     }
 }

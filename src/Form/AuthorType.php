@@ -15,11 +15,11 @@ class AuthorType extends AbstractType
         $builder
             ->add('name', TextType::class,
                 ['label' => 'Author name',
-                    'required' => false,
+                    'required' => true,
                 ])
             ->add('country', TextType::class,
                 ['label' => 'Country',
-                    'required' => false,
+                    'required' => true,
                 ]);
     }
 
