@@ -25,11 +25,9 @@ class AuthorRepository extends ServiceEntityRepository
     {
         $this->getEntityManager()->persist($entity);
 
-//        dd($entity);
         if ($flush) {
             $this->getEntityManager()->flush();
         }
-        dd($entity);
     }
 
     public function remove(Author $entity, bool $flush = false): void

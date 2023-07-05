@@ -6,13 +6,15 @@
         <button class="btn btn-danger btn-sm js-remove-tool">- Remove Author</button>
 
         {{ form_errors(authorsForm) }}
-        <button class="btn btn-primary btn-sm js-edit-author">Edit Author</button>
-        <button class="btn btn-success btn-sm js-save-author">Save Author</button>
+{#        <button class="btn btn-primary btn-sm js-edit-author">Edit Author</button>#}
+{#        <button class="btn btn-success btn-sm js-save-author">Save Author</button>#}
 
         {{ form_errors(authorsForm) }}
 
-        {{ form_row(authorsForm.name, {'attr': {'class': 'js-author-name', 'readonly': 'readonly'}}) }}
-        {{ form_row(authorsForm.country, {'attr': {'class': 'js-author-country', 'readonly': 'readonly'}}) }}
+        {{ form_row(authorsForm.name, {'attr': {'class': 'js-author-name'}}) }}
+        {{ form_row(authorsForm.country, {'attr': {'class': 'js-author-country'}}) }}
+{#        {{ form_row(authorsForm.name, {'attr': {'class': 'js-author-name', 'readonly': 'readonly'}}) }}#}
+{#        {{ form_row(authorsForm.country, {'attr': {'class': 'js-author-country', 'readonly': 'readonly'}}) }}#}
 
 
         {#        {{ form_row(authorsForm.name) }}#}

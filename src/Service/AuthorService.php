@@ -24,16 +24,13 @@ class AuthorService
             ->setCreatedAt(new \DateTime())
             ->setUpdatedAt(new \DateTime());
 
-//        dd($newAuthor);
         $this->repository->save($newAuthor, true);
-//        dd($newAuthor);
 
         return $newAuthor;
     }
 
     public function getAuthor(Author $author): ?Author
     {
-//        dd($author);
         if ($author->getId() !== null){
             $foundAuthor = $this->repository->findOneBy(['id' => $author->getId()]);
         } elseif ($author->getName() !== null){
@@ -42,7 +39,6 @@ class AuthorService
             $foundAuthor = $this->repository->findOneBy(['country' => $author->getCountry()]);
         }
 
-//        dd($foundAuthor);
         return $foundAuthor;
     }
 }

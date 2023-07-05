@@ -28,7 +28,6 @@ class BookController extends AbstractController
         $books = $this->manager->action('all');
         $form = $this->createForm(SearchFormType::class);
         $form->handleRequest($request);
-//        dd($books);
 
         if ($form->isSubmitted() && $form->isValid()) {
             $params = $form->getData();
@@ -79,7 +78,6 @@ class BookController extends AbstractController
         $book = $this->manager->action('find',$bookId);
         $form = $this->createForm(BookType::class, $book);
 
-//        dd($book->getAuthors()->toArray());
         $form->get('authors')->setData($book->getAuthors()->toArray());
         $form->handleRequest($request);
 

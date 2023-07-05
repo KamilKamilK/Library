@@ -2,7 +2,6 @@
 
 namespace App\Service;
 
-use App\Entity\Author;
 use App\Entity\Book;
 use App\Repository\BookRepository;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -52,21 +51,16 @@ class BookService
         if (empty($authors)) {
             return $authors;
         }
-//        dd($authors->toArray());
 
         foreach ($authors->toArray() as $author) {
 
             $mappedAuthor = $this->authorService->getAuthor($author);
-//            var_dump($mappedAuthor);
             if (!$mappedAuthor) {
-//                dd('kamil');
                 $mappedAuthor = $this->authorService->createAuthor($author);
             }
 
             $mappedAuthors->add($mappedAuthor);
         }
-
-//        dd($mappedAuthors);
 
         return $mappedAuthors;
     }
