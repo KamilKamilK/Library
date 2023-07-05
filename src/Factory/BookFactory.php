@@ -52,7 +52,6 @@ final class BookFactory extends ModelFactory
             'publisher' => self::faker()->company(),
             'isPublished' => false,
             'createdAt'=> new \DateTime(),
-            'updatedAt'=> new \DateTime(),
         ];
     }
 

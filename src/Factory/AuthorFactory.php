@@ -50,7 +50,6 @@ final class AuthorFactory extends ModelFactory
             'country' => self::faker()->country(),
             'name' => self::faker()->name(),
             'createdAt'=> new \DateTime(),
-            'updatedAt'=> new \DateTime(),
         ];
     }
 

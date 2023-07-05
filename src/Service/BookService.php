@@ -25,15 +25,12 @@ class BookService
 
     public function createBook($params): void
     {
-        $this->mapAuthors($params->getAuthors());
-
         $book = (new Book())
             ->setTitle($params->getTitle())
             ->setPublisher($params->getPublisher())
             ->setPages($params->getPages())
             ->setIsPublished($params->isPublished())
-            ->setCreatedAt(new \DateTime())
-            ->setUpdatedAt(new \DateTime());
+            ->setCreatedAt(new \DateTime());
 
         $authorCollection = $this->mapAuthors($params->getAuthors());
 
@@ -41,6 +38,23 @@ class BookService
             $book->addAuthor($author);
         }
 
+        $this->bookRepository->save($book, true);
+
+    }
+
+    public function updateBook($id, $params): void
+    {
+        $book = $this->findById($id);
+        $book->setTitle($params->getTitle())
+            ->setPublisher($params->getPublisher())
+            ->setPages($params->getPages())
+            ->setIsPublished($params->isPublished());
+
+        $authorCollection = $this->mapAuthors($params->getAuthors());
+
+        foreach ($authorCollection as $author) {
+            $book->addAuthor($author);
+        }
         $this->bookRepository->save($book, true);
     }
 
@@ -54,35 +68,17 @@ class BookService
 
         foreach ($authors->toArray() as $author) {
 
-            $mappedAuthor = $this->authorService->getAuthor($author);
+            $mappedAuthor = $this->authorService->getAuthor($author);;
             if (!$mappedAuthor) {
                 $mappedAuthor = $this->authorService->createAuthor($author);
+            } else {
+                $mappedAuthor = $this->authorService->updateAuthor($author);
             }
 
             $mappedAuthors->add($mappedAuthor);
-        }
 
+        }
         return $mappedAuthors;
-    }
-
-
-    public function updateBook($id, $params): void
-    {
-        $book = $this->findById($id);
-        $book->setTitle($params->getTitle())
-            ->setPublisher($params->getPublisher())
-            ->setPages($params->getPages())
-            ->setIsPublished($params->isPublished())
-            ->setUpdatedAt(new \DateTime())
-            ->setCreatedAt($params->getCreatedAt());
-
-        $authorCollection = $this->mapAuthors($params->getAuthors());
-
-        foreach ($authorCollection as $author) {
-            $book->addAuthor($author);
-        }
-
-        $this->bookRepository->save($book, true);
     }
 
     public function findByParam($params): array
