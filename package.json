@@ -1,0 +1,8 @@
+{
+  "dependencies": {
+    "jquery": "^3.7.0"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.22.8"
+  }
+}

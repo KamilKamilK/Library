@@ -7,6 +7,7 @@ use App\Form\SearchFormType;
 use App\Manager\LibraryManager;
 use Exception;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -25,6 +26,9 @@ class BookController extends AbstractController
     #[Route('/', name: 'app_books')]
     public function getBooks(Request $request): Response
     {
+//        phpinfo();
+//        xdebug_info();
+//        $this->setContainer();
         $books = $this->manager->action('all');
         $form = $this->createForm(SearchFormType::class);
         $form->handleRequest($request);
@@ -32,14 +36,14 @@ class BookController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $params = $form->getData();
             try {
-                $books = $this->manager->action('search',null, $params);
+                $books = $this->manager->action('search', null, $params);
             } catch (\Exception) {
                 throw $this->createNotFoundException();
             }
-        }  else {
+        } else {
             $errors = $form->getErrors(true, true);
             foreach ($errors as $error) {
-                echo $error->getMessage()."<br>";
+                echo $error->getMessage() . "<br>";
             }
         }
 
@@ -59,7 +63,7 @@ class BookController extends AbstractController
             $params = $form->getData();
 
             try {
-                $this->manager->action('create', null,$params);
+                $this->manager->action('create', null, $params);
 
                 return $this->redirectToRoute('app_books');
             } catch (\Exception $exception) {
@@ -73,9 +77,10 @@ class BookController extends AbstractController
     }
 
     #[Route('/book/edit/{bookId}', name: 'edit_book')]
-    public function put($bookId, Request $request): Response
+    public function put($bookId, Request $request): Response|JsonResponse
     {
-        $book = $this->manager->action('find',$bookId);
+        $book = $this->manager->action('find', $bookId);
+        $authors = $book->getAuthors();
         $form = $this->createForm(BookType::class, $book);
 
         $form->get('authors')->setData($book->getAuthors()->toArray());
@@ -85,7 +90,7 @@ class BookController extends AbstractController
             $params = $form->getData();
 
             try {
-                $this->manager->action('update',$bookId, $params);
+                $this->manager->action('update', $bookId, $params);
 
                 return $this->redirectToRoute('app_books');
             } catch (\Exception $exception) {
@@ -93,10 +98,21 @@ class BookController extends AbstractController
             }
         }
 
-        return $this->render('book/editBook.html.twig', [
-            'form' => $form->createView(),
-            'book' => $book
-        ]);
+        $jsonAuthor = $this->manager->serializer($authors->toArray());
+
+        $responseData = [
+            'authors' => $jsonAuthor
+        ];
+
+        if ($request->isXmlHttpRequest()) {
+            return new JsonResponse($responseData);
+        } else {
+            return $this->render('book/editBook.html.twig', [
+                'form' => $form->createView(),
+                'book' => $book,
+                'authors' => $authors
+            ]);
+        }
     }
 
     #[Route('/book/delete/{bookId}', name: 'delete_book')]

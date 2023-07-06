@@ -100,4 +100,15 @@ class BookService
         $book = $this->bookRepository->find($id);
         $this->bookRepository->remove($book, true);
     }
+
+//    public function serialize($book): array
+//    {
+//
+//        $jsonBook = [
+//            'name' => $book->getName(),
+//            'country' => $author->getCountry(),
+//        ];
+//
+//        return $jsonBook;
+//    }
 }

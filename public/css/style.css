@@ -1,3 +1,7 @@
 footer {
     background-color: #efefee;
 }
+
+fieldset {
+    display: none;
+}

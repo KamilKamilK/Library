@@ -51,6 +51,8 @@ class BookType extends AbstractType
                 'allow_delete' => true,
                 'by_reference' => false,
                 'prototype' => true,
+                'data' => $options['authors'], // Pass the authors data to the collection field
+
             ]);
     }
 
@@ -58,6 +60,7 @@ class BookType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => Book::class,
+            'authors' => null, // Define the 'authors' option and set its default value to null
         ]);
     }
 }

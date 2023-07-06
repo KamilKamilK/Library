@@ -2,7 +2,7 @@
 
 {% macro printAuthorRow(authorsForm, nameValue = null, countryValue = null) %}
     <div class="col-xs-4 js-tool-item">
-        <button class="btn btn-danger btn-sm js-remove-tool">- Remove Author</button>
+        <button class="btn btn-danger btn-sm js-remove-author">- Remove Author</button>
         {{ form_errors(authorsForm) }}
         {{ form_row(authorsForm.name) }}
         {{ form_row(authorsForm.country) }}
@@ -27,7 +27,7 @@
     {% endfor %}
 
     <div class="text-center">
-        <button class="btn btn-success btn-sm js-tool-add">+ Add Author</button>
+        <button class="btn btn-success btn-sm js-author-add">+ Add Author</button>
     </div>
 </div>
 

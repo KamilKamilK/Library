@@ -42,4 +42,20 @@ class AuthorService
 
         return $foundAuthor;
     }
+
+    public function serialize($authorList): array
+    {
+        $serializedArr = [];
+
+        foreach ($authorList as $author) {
+            $authorData = [
+                'id' => $author->getId(),
+                'name' => $author->getName(),
+                'country' => $author->getCountry(),
+            ];
+
+            $serializedArr[] = $authorData;
+        }
+        return $serializedArr;
+    }
 }
