@@ -6,17 +6,9 @@
         <button class="btn btn-danger btn-sm js-remove-author">- Remove Author</button>
 
         {{ form_errors(authorsForm) }}
-{#        <button class="btn btn-primary btn-sm js-edit-author">Edit Author</button>#}
-{#        <button class="btn btn-success btn-sm js-save-author">Save Author</button>#}
 
         {{ form_row(authorsForm.name, {'attr': {'class': 'js-author-name'}}) }}
         {{ form_row(authorsForm.country, {'attr': {'class': 'js-author-country'}}) }}
-
-{#        {{ form_row(authorsForm.name, {'attr': {'class': 'js-author-name'}, 'value': author.name}) }}#}
-{#        {{ form_row(authorsForm.country, {'attr': {'class': 'js-author-country'}, 'value': author.country}) }}#}
-
-{#        {{ form_row(authorsForm.name, {'attr': {'class': 'js-author-name', 'readonly': 'readonly'}}) }}#}
-{#        {{ form_row(authorsForm.country, {'attr': {'class': 'js-author-country', 'readonly': 'readonly'}}) }}#}
 
     </div>
 {% endmacro %}
@@ -33,21 +25,11 @@
      data-prototype="{{ formMacros.printAuthorRow(form.authors.vars.prototype)|e('html_attr') }}"
      data-index="{{ form.authors|length }}">
 
-{#    {% for authorForm in form.authors %}#}
-{#        {{ formMacros.printAuthorRow(authorForm, authorForm.vars.data) }}#}
-{#    {% endfor %}#}
-
-    {% for authorForm in form.authors %}
-        <h1>{{ authorForm.vars.value }}</h1>
-        {{ formMacros.printAuthorRow(authorForm) }}
-    {% endfor %}
-
     <div class="text-center ">
-        <button id="{{ book.id }}" class="btn btn-success btn-sm js-author-add ">+ Add Author</button>
+        <button class="btn btn-success btn-sm js-author-add ">+ Add Author</button>
 
-{#        <button id="{{ book.id }}" class="btn btn-success btn-sm js-author-list">Show Authors</button>#}
     </div>
 </div>
 
-<button type="submit" class="btn btn-primary" formnovalidate>Update Book</button>
+<button id="{{ book.id }}" type="submit" class="btn btn-primary author-list" formnovalidate>Update Book</button>
 {{ form_end(form) }}

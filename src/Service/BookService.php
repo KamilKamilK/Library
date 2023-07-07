@@ -3,6 +3,7 @@
 namespace App\Service;
 
 use App\Entity\Book;
+use App\Repository\AuthorRepository;
 use App\Repository\BookRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 
@@ -10,12 +11,14 @@ class BookService
 {
     private BookRepository $bookRepository;
     private AuthorService $authorService;
+    private AuthorRepository $authorRepository;
 
-    public function __construct(BookRepository $bookRepository, AuthorService $authorService)
+    public function __construct(BookRepository $bookRepository, AuthorRepository $authorRepository, AuthorService $authorService)
     {
 
         $this->bookRepository = $bookRepository;
         $this->authorService = $authorService;
+        $this->authorRepository = $authorRepository;
     }
 
     public function getAllBooks(): array
@@ -45,16 +48,23 @@ class BookService
     public function updateBook($id, $params): void
     {
         $book = $this->findById($id);
+
         $book->setTitle($params->getTitle())
             ->setPublisher($params->getPublisher())
             ->setPages($params->getPages())
             ->setIsPublished($params->isPublished());
 
-        $authorCollection = $this->mapAuthors($params->getAuthors());
+        $authorCollection = $this->mapAuthors($params->getAuthors()->toArray());
 
-        foreach ($authorCollection as $author) {
-            $book->addAuthor($author);
+//        dd($authorCollection);
+        if (!empty($authorCollection)) {
+//        if (!empty($authorCollection) || $authorCollection->count() > 0) {
+            foreach ($authorCollection->toArray() as $author) {
+                $book->addAuthor($author);
+            }
         }
+
+//        dd($book);
         $this->bookRepository->save($book, true);
     }
 
@@ -66,17 +76,16 @@ class BookService
             return $authors;
         }
 
-        foreach ($authors->toArray() as $author) {
+        foreach ($authors as $newAuthor) {
 
-            $mappedAuthor = $this->authorService->getAuthor($author);;
-            if (!$mappedAuthor) {
-                $mappedAuthor = $this->authorService->createAuthor($author);
+            $author = $this->authorService->getAuthor($newAuthor);
+
+            if (!$author) {
+                $mapAuthor = $this->authorService->createAuthor($newAuthor);
+                $mappedAuthors->add($mapAuthor);
             } else {
-                $mappedAuthor = $this->authorService->updateAuthor($author);
+                $this->authorService->updateAuthor($author, $newAuthor);
             }
-
-            $mappedAuthors->add($mappedAuthor);
-
         }
         return $mappedAuthors;
     }
@@ -101,14 +110,12 @@ class BookService
         $this->bookRepository->remove($book, true);
     }
 
-//    public function serialize($book): array
-//    {
-//
-//        $jsonBook = [
-//            'name' => $book->getName(),
-//            'country' => $author->getCountry(),
-//        ];
-//
-//        return $jsonBook;
-//    }
+    public function removeAuthor($bookId, $authorId): void
+    {
+        $book = $this->bookRepository->find($bookId);
+        $author = $this->authorRepository->find($authorId);
+
+        $book->removeAuthor($author);
+        $this->bookRepository->save($book, true);
+    }
 }

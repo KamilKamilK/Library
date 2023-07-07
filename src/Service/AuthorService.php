@@ -22,12 +22,14 @@ class AuthorService
             ->setCreatedAt(new \DateTime());
     }
 
-    public function updateAuthor(Author $author): Author
+    public function updateAuthor(Author $author, Author $newAuthor): void
     {
         $author
+            ->setName($newAuthor->getName())
+            ->setCountry($newAuthor->getCountry())
             ->setUpdatedAt(new \DateTime());
 
-        return $author;
+        $this->repository->save($author, true);
     }
 
     public function getAuthor(Author $author): ?Author

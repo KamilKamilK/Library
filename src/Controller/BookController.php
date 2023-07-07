@@ -5,7 +5,6 @@ namespace App\Controller;
 use App\Form\BookType;
 use App\Form\SearchFormType;
 use App\Manager\LibraryManager;
-use Exception;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -26,9 +25,6 @@ class BookController extends AbstractController
     #[Route('/', name: 'app_books')]
     public function getBooks(Request $request): Response
     {
-//        phpinfo();
-//        xdebug_info();
-//        $this->setContainer();
         $books = $this->manager->action('all');
         $form = $this->createForm(SearchFormType::class);
         $form->handleRequest($request);
@@ -43,7 +39,7 @@ class BookController extends AbstractController
         } else {
             $errors = $form->getErrors(true, true);
             foreach ($errors as $error) {
-                echo $error->getMessage() . "<br>";
+                $this->addFlash('error', $error->getMessage());
             }
         }
 
@@ -64,10 +60,11 @@ class BookController extends AbstractController
 
             try {
                 $this->manager->action('create', null, $params);
-
+                $this->addFlash('success', 'Book is successfully created');
                 return $this->redirectToRoute('app_books');
             } catch (\Exception $exception) {
-                throw new Exception($exception->getMessage());
+                $this->addFlash('error', $exception->getMessage());
+//                throw new Exception($exception->getMessage());
             }
         }
 
@@ -81,36 +78,29 @@ class BookController extends AbstractController
     {
         $book = $this->manager->action('find', $bookId);
         $authors = $book->getAuthors();
-        $form = $this->createForm(BookType::class, $book);
-
-        $form->get('authors')->setData($book->getAuthors()->toArray());
+        $form = $this->createForm(BookType::class);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
             $params = $form->getData();
-
             try {
                 $this->manager->action('update', $bookId, $params);
-
+                $this->addFlash('success', 'Book is successfully updated');
                 return $this->redirectToRoute('app_books');
             } catch (\Exception $exception) {
-                throw new Exception($exception->getMessage());
+                $this->addFlash('error', $exception->getMessage());
+//                throw new Exception($exception->getMessage());
             }
         }
 
         $jsonAuthor = $this->manager->serializer($authors->toArray());
 
-        $responseData = [
-            'authors' => $jsonAuthor
-        ];
-
         if ($request->isXmlHttpRequest()) {
-            return new JsonResponse($responseData);
+            return new JsonResponse($jsonAuthor);
         } else {
             return $this->render('book/editBook.html.twig', [
                 'form' => $form->createView(),
                 'book' => $book,
-                'authors' => $authors
             ]);
         }
     }
@@ -119,6 +109,16 @@ class BookController extends AbstractController
     public function delete($bookId): RedirectResponse
     {
         $this->manager->action('delete', $bookId);
+        $this->addFlash('success', 'Book is successfully deleted');
         return $this->redirectToRoute('app_books');
+    }
+
+    #[Route('/author/remove/{bookId}/{authorId}', name: 'remove_author')]
+    public function removeAuthor($bookId, $authorId): JsonResponse
+    {
+        $this->manager->action('remove', $bookId, $authorId);
+        return new JsonResponse([
+            'success' => true,
+        ]);
     }
 }

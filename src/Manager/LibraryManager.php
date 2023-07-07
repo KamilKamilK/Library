@@ -30,8 +30,11 @@ class LibraryManager
             return $this->bookService->getAllBooks();
         } elseif ($action === 'search') {
             return $this->bookService->findByParam($params);
+        } elseif ($action === 'remove') {
+            $this->bookService->removeAuthor($id, $params);
         }
     }
+
 
     public function serializer($authorList): array
     {
