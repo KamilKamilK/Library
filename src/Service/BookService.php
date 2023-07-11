@@ -110,7 +110,19 @@ class BookService
             return $books;
         }
 
-        return $this->bookRepository->findAllBySearchForm($title, $publisher, $isPublished);
+        $books = $this->bookRepository->findAllBySearchForm($title, $publisher, $isPublished);
+
+        foreach ($books as $book){
+            $this->checkAuthorAmount($book,3);
+        }
+        return $books;
+    }
+
+    public function checkAuthorAmount($book, $amount): void
+    {
+        if ($book->getAuthors()->toArray() > $amount){
+            throw new \Exception('There is too many authors in book with title : '.$book->getTitle());
+        }
     }
 
     public function findById($id): Book

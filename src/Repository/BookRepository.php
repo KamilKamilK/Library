@@ -44,13 +44,13 @@ class BookRepository extends ServiceEntityRepository
         $queryBuilder = $this->createQueryBuilder('b');
 
         if (!empty($title)) {
-            $queryBuilder->andWhere('b.title = :title')
-                ->setParameter('title', $title);
+            $queryBuilder->andWhere('b.title LIKE :title')
+                ->setParameter('title', '%'.$title.'%');
         }
 
         if (!empty($publisher)) {
-            $queryBuilder->andWhere('b.publisher = :publisher')
-                ->setParameter('publisher', $publisher);
+            $queryBuilder->andWhere('b.publisher LIKE :publisher')
+                ->setParameter('publisher', '%'.$publisher.'%');
         }
 
         if (!is_null($isPublished)) {

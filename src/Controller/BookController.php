@@ -25,35 +25,18 @@ class BookController extends AbstractController
     #[Route('/', name: 'app_books')]
     public function getBooks(Request $request): Response
     {
-
         $books = $this->manager->action('all');
 
-//        dd($books, $request);
         $form = $this->createForm(SearchFormType::class);
-//        $form->handleRequest($request);
 
-//        dd($form->isSubmitted() , $form->isValid());
-
-//        if ($form->isSubmitted() && $form->isValid()) {
         if (!empty($request->request->all()['search_form'])) {
             $params = $request->request->all()['search_form'];
-//            dd($params);
-
-//            $params = $form->getData();
             try {
                 $books = $this->manager->action('search', null, $params);
-            } catch (\Exception) {
-                throw $this->createNotFoundException();
+            } catch (\Exception $exception) {
+                $this->addFlash('error', $exception->getMessage());
             }
         }
-//        } else {
-//            $errors = $form->getErrors(true, true);
-//            foreach ($errors as $error) {
-//                $this->addFlash('error', $error->getMessage());
-//            }
-//        }
-
-
 
         return $this->render('book/index.html.twig', [
             'books' => $books,
@@ -76,7 +59,6 @@ class BookController extends AbstractController
                 return $this->redirectToRoute('app_books');
             } catch (\Exception $exception) {
                 $this->addFlash('error', $exception->getMessage());
-//                throw new Exception($exception->getMessage());
             }
         }
 
