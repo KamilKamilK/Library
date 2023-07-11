@@ -6,6 +6,7 @@ use App\Entity\Book;
 use App\Repository\AuthorRepository;
 use App\Repository\BookRepository;
 use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class BookService
 {
@@ -56,15 +57,12 @@ class BookService
 
         $authorCollection = $this->mapAuthors($params->getAuthors()->toArray());
 
-//        dd($authorCollection);
         if (!empty($authorCollection)) {
-//        if (!empty($authorCollection) || $authorCollection->count() > 0) {
             foreach ($authorCollection->toArray() as $author) {
                 $book->addAuthor($author);
             }
         }
 
-//        dd($book);
         $this->bookRepository->save($book, true);
     }
 
@@ -92,9 +90,25 @@ class BookService
 
     public function findByParam($params): array
     {
-        $title = $params->getTitle() ?? null;
-        $publisher = $params->getPublisher() ?? null;
-        $isPublished = $params->isPublished();
+        $title = $params['title'] !== '' ? $params['title'] : null;
+        $publisher = $params['publisher'] !== '' ? $params['publisher'] : null;
+        $isPublished = $params['isPublished'] !== '' ? $params['isPublished'] : null;
+
+        if ($params['author'] !== '') {
+            $authors = $this->authorRepository->findByName($params['author']);
+            if (!$authors) {
+                throw new NotFoundHttpException("There is now author with name: " . $params['author']);
+            }
+
+            $books = [];
+            foreach ($authors as $author) {
+                foreach ($author->getBooks()->toArray() as $book) {
+                    $books[] = $book;
+                }
+            }
+
+            return $books;
+        }
 
         return $this->bookRepository->findAllBySearchForm($title, $publisher, $isPublished);
     }

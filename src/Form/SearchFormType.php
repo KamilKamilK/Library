@@ -2,7 +2,10 @@
 
 namespace App\Form;
 
+use App\Entity\Author;
 use App\Entity\Book;
+use App\Repository\AuthorRepository;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -56,21 +59,12 @@ class SearchFormType extends AbstractType
                     'false' => false,
                 ],
             ])
-//            ->add('createdAt',DateType::class,
-//                ['label' => 'Book created at',
-//                    'required' => false,
-//                    'widget' => 'single_text',
-//                    'attr' => [
-//                        'name' => 'createdAt,'
-//                    ],
-//                    'empty_data' => null,
-//                    'constraints' => [
-//                        new Valid(),
-//                        new NotBlank([
-//                            'allowNull' => true,
-//                        ]),
-//                    ],
-//                ])
+            ->add('author', TextareaType::class , [
+                'label' => 'Author',
+                'required' => false,
+
+            ])
+
             ->add('submit', SubmitType::class,
                 ['label' => 'Search']);
         ;

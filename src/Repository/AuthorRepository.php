@@ -38,4 +38,16 @@ class AuthorRepository extends ServiceEntityRepository
             $this->getEntityManager()->flush();
         }
     }
+
+    public function findByName($name): mixed
+    {
+        $queryBuilder = $this->createQueryBuilder('a');
+
+        if (!empty($name)) {
+            $queryBuilder->andWhere('a.name LIKE :name')
+                ->setParameter('name', '%'.$name.'%');
+        }
+
+        return $queryBuilder->getQuery()->getResult();
+    }
 }
