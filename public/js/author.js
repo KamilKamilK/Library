@@ -58,7 +58,8 @@ const URL = `http://${window.location.host}`;
                 url: getAuthorsUrl,
                 type: 'POST',
                 success: function (response) {
-                    let $authors = response.authors;
+                    let parsedResponse = JSON.parse(response);
+                    let $authors = parsedResponse.authors;
 
                     let addButton = $('.js-author-add');
                     let table = addButton.closest('.text-center');

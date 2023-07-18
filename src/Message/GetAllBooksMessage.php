@@ -2,7 +2,7 @@
 
 namespace App\Message;
 
-class GetAuthorQuery
+class GetAllBooksMessage
 {
 
 }
